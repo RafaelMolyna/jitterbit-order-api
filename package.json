@@ -2,7 +2,10 @@
   "name": "jitterbit-order-api",
   "version": "1.0.0",
   "type": "module",
-  "description": "",
+  "engines": {
+    "node": "v20.x"
+  },
+  "description": "Jitterbit Order API for technical assessment",
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
