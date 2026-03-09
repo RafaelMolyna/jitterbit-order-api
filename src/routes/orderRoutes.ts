@@ -6,9 +6,12 @@ import {
   listOrders,
   updateOrder,
 } from "../controllers/orderController.js";
+import { CreateOrderSchema } from "../utils/orderValidation.js";
+import { validate } from "./../middlewares/validateResource.js";
 
 const router = Router();
 
+router.post("/", validate(CreateOrderSchema), createOrder);
 router.post("/", createOrder); // Add new order
 router.get("/list", listOrders); // List orders
 router.get("/:id", getOrderById); // Get single Order
