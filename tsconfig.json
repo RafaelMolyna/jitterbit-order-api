@@ -1,26 +1,19 @@
 {
   "compilerOptions": {
-    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
 
     "rootDir": "./src",
     "outDir": "./dist",
-
-    "module": "NodeNext",
-    "target": "ES2022",
-
     "sourceMap": true,
-    "declaration": true,
-
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
 
     "strict": true,
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
