@@ -38,7 +38,7 @@ export const createOrder = async (
     // Save the order
     await newOrder.save();
 
-    // Return the Portuguese contract, but attach the raw English document for the recruiter
+    // Return the Portuguese contract
     res.status(201).json(mapOrderToPortuguese(newOrder));
   } catch (error: any) {
     // Handle duplicate orderId (MongoDB unique index error code 11000)
@@ -110,10 +110,25 @@ export const updateOrder = (req: Request, res: Response) => {
     .json({ message: `Mock: Update order endpoint hit for ID: ${id}` });
 };
 
-export const deleteOrder = (req: Request, res: Response) => {
-  const { id } = req.params;
-  // 200 OK or 204 No Content are standard for DELETE
-  res
-    .status(200)
-    .json({ message: `Mock: Delete order endpoint hit for ID: ${id}` });
+export const deleteOrder = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const { id } = req.params; // Cleaner extraction
+    const result = await Order.deleteOne({ orderId: id });
+
+    if (result.deletedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: `Order with id '${id}' not found` });
+    }
+
+    res.status(200).json({ message: `Order with id '${id}' deleted` });
+  } catch (error: any) {
+    res.status(500).json({
+      message: `Error deleting order with id: ${req.params.id}`,
+      error: error.message,
+    });
+  }
 };
