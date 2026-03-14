@@ -1,5 +1,5 @@
 import { IOrder } from "../models/Order.js";
-import { CreateOrderInput } from "./orderValidation.js";
+import { type CreateOrderInput } from "./orderValidation.js";
 
 /**
  * Mappings for the Incoming Data (POST/PUT)

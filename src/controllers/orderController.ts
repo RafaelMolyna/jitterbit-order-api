@@ -103,11 +103,53 @@ export const getOrderById = async (
   }
 };
 
-export const updateOrder = (req: Request, res: Response) => {
-  const { id } = req.params;
-  res
-    .status(200)
-    .json({ message: `Mock: Update order endpoint hit for ID: ${id}` });
+export const updateOrder = async (
+  req: Request<{ id: string }, {}, CreateOrderInput>,
+  res: Response,
+) => {
+  try {
+    const { id } = req.params;
+    const { valorTotal, items } = req.body;
+
+    // Calculate the new total (Logic reuse!)
+    const calculatedTotal = items.reduce(
+      (sum, item) => sum + item.quantidadeItem * item.valorItem,
+      0,
+    );
+
+    // Strict Validation (Same as Create)
+    if (Math.abs(calculatedTotal - valorTotal) > 0.01) {
+      return res.status(400).json({
+        message:
+          "Validation failed: Total value does not match the sum of items",
+        details: {
+          provided: valorTotal,
+          calculated: Number(calculatedTotal.toFixed(2)),
+        },
+      });
+    }
+
+    // Update the Database
+    // { new: true } returns the document AFTER the update is applied
+    const updatedOrder = await Order.findOneAndUpdate(
+      { orderId: id },
+      mapPortugueseToOrder(req.body, calculatedTotal),
+      { new: true, runValidators: true },
+    );
+
+    if (!updatedOrder) {
+      return res
+        .status(404)
+        .json({ message: `Order with id '${id}' not found` });
+    }
+
+    // 4. Return translated version
+    return res.status(200).json(mapOrderToPortuguese(updatedOrder));
+  } catch (error: any) {
+    return res
+      .status(500)
+      .json({ message: "Error updating order", error: error.message });
+  }
 };
 
 export const deleteOrder = async (

@@ -4,7 +4,7 @@ export const CreateOrderSchema = z.object({
   body: z.object({
     numeroPedido: z.string().min(1, "Order number is required"),
     valorTotal: z.number().positive(),
-    dataCriacao: z.string().datetime({ offset: true }), // Validates ISO 8601 strings
+    dataCriacao: z.iso.datetime(), // Validates ISO 8601 strings
     items: z
       .array(
         z.object({
@@ -17,5 +17,5 @@ export const CreateOrderSchema = z.object({
   }),
 });
 
-// This helps TypeScript know exactly what the 'Portuguese' data looks like
+// This is for TypeScript knowing exactly what the 'Portuguese' data looks like
 export type CreateOrderInput = z.infer<typeof CreateOrderSchema>["body"];
